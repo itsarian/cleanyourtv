@@ -410,6 +410,10 @@
          app_library) and App info. On by default since 3.3; false keeps the old behaviour: holding OK opens the app's
          App info page. A theme's config.json can set "tile_menu" either way. -->
     <bool name="tile_menu">true</bool>
+    <!-- An option in the tile menu (hold OK on a tile) to close the app and stop its background processes,
+         restarting it cold on next launch. Requires android.permission.KILL_BACKGROUND_PROCESSES.
+         Off by default; a theme can set "tile_close_app": true. -->
+    <bool name="tile_close_app">false</bool>
 
     <!-- Grid rows left visible under the dock on the home screen. 0 = dock sits at the very bottom. Tiles shrink if
          the dock, its title and this many rows would not otherwise fit the screen height. -->

@@ -71,6 +71,7 @@ rule sit on its wanted list until a screenshot arrives.
 | `clock_format` | <img src="switches/clock_format.jpg" width="320" alt="clock_format on a TV"> |
 | `glow_snap` | <img src="switches/glow_snap.jpg" width="320" alt="glow_snap on a TV: the glow in Netflix red behind the dock"> |
 | `settings_key_clear_task` | <img src="switches/settings_key_clear_task.jpg" width="320" alt="settings_key_clear_task on a TV: the TV Settings screen the gear opens"> |
+| `tile_close_app` | <img src="switches/tile_close_app.jpg" width="320" alt="tile_close_app on a TV: Close app option in the tile menu"> |
 
 `icon_tiles` is a `config.xml` key rather than a theme key, as its type cell in the Keys table says: the
 launcher reads its package list from the built-in array (`AppAdapter.java` reads

@@ -220,6 +220,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final boolean uniformTiles;
     /** Packages drawn from their icon and name even when they have a banner (config.xml icon_tiles). */
     private final Set<String> iconTiles;
+    private final Set<String> coldBootPackages = new HashSet<>();
     private final List<Entry> items = new ArrayList<>();
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
@@ -526,6 +527,20 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
+    void markForColdBoot(String pkg) {
+        if (pkg != null) coldBootPackages.add(pkg);
+    }
+
+    static int launchFlags(boolean coldBoot) {
+        int flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+        if (coldBoot) {
+            flags |= Intent.FLAG_ACTIVITY_CLEAR_TASK;
+        } else {
+            flags |= Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED;
+        }
+        return flags;
+    }
+
     /** Opens the tile's activity by explicit component, with no extras: a card can name nothing else. */
     @SuppressWarnings("deprecation")
     private void launch(Entry e) {
@@ -536,7 +551,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         Intent i = new Intent(Intent.ACTION_MAIN)
                 .setComponent(e.component)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                .addFlags(launchFlags(coldBootPackages.remove(e.pkg)));
         // TV apps launch with the same leanback intent as from the stock launcher or the remote, so an app
         // already running resumes instead of restarting; only phone apps added from the library use plain MAIN.
         if (leanbackPackages.contains(e.pkg)) i.addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER);

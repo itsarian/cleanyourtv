@@ -3,6 +3,7 @@ package com.gathin.tvhome;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -133,6 +134,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean appLibraryEnabled;
     /** The same opt-in menu is available from either hold-OK or the remote's Menu key. */
     private boolean tileMenuEnabled;
+    private boolean tileCloseApp;
     private String inputAction;
     private List<String> inputSources;
     private String inputUriScheme;
@@ -498,6 +500,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         liveTvInputId = cfg.liveTvInputId;
         appLibraryEnabled = cfg.appLibrary;
         tileMenuEnabled = cfg.tileMenu;
+        tileCloseApp = cfg.tileCloseApp;
         inputAction = cfg.inputAction;
         inputSources = cfg.inputSources;
         inputUriScheme = cfg.inputUriScheme;
@@ -3872,6 +3875,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Some firmware has no App info page at all; a row that only toasts "can't open" helps nobody.
         Intent info = SystemSettings.appInfo(this, pkg);
         if (info != null) addSettingsMenuRow(rows, popup, R.string.library_app_info, () -> open(info));
+        if (tileCloseApp) {
+            addSettingsMenuRow(rows, popup, R.string.tile_close_app, () -> {
+                ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                if (am != null) {
+                    am.killBackgroundProcesses(pkg);
+                }
+                adapter.markForColdBoot(pkg);
+                String label = adapter.labelAt(position);
+                String msg = getString(R.string.tile_app_closed, label != null && !label.isEmpty() ? label : pkg);
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            });
+        }
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));
         // Dock tiles sit near the bottom of the screen: open the menu above the tile when it would not fit below.

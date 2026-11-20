@@ -265,6 +265,8 @@ final class Config {
     final boolean handleViewInputs;
     /** Hold OK on a tile opens a menu (Move, Remove from Home, App info) instead of App info (config.xml / theme tile_menu). */
     final boolean tileMenu;
+    /** An option in the tile menu (hold OK on a tile) to close the app (config.xml / theme tile_close_app). Off by default. */
+    final boolean tileCloseApp;
     /** With wifi_status_color, the icon orange while connected without internet (a captive portal) and red while offline (config.xml, wifi_status_warnings). */
     final boolean wifiStatusWarnings;
     /** Apps shown as round logo buttons in the top bar, left of the network pill, and no longer as tiles (config.xml, top_bar_apps). */
@@ -296,12 +298,13 @@ final class Config {
                    Festival festival, int[] inputKeycodes, List<String> appKeys, String stockHomeRedirect,
                    List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, boolean appGlow, boolean fadeRows, int homeIdleClockMinutes,
                    boolean keyFilter, boolean dockGlass, String glowStyle, boolean wallpaperCaptions,
-                   boolean handleViewInputs, boolean tileMenu, boolean dockEvenPadding, boolean dockBand, boolean cinematicDots, boolean cinematicWhiteFocus, boolean wifiStatusColor, int cinematicScrim, int cinematicArt,
+                   boolean handleViewInputs, boolean tileMenu, boolean tileCloseApp, boolean dockEvenPadding, boolean dockBand, boolean cinematicDots, boolean cinematicWhiteFocus, boolean wifiStatusColor, int cinematicScrim, int cinematicArt,
                    Map<String, Set<String>> wallpaperMoods, boolean gamepadPassthrough, boolean consumeVolumeKeys, boolean volumePausesFilter, boolean homeIgnoreChannelKeys, boolean powerOnHome, boolean homeLongPressHome, boolean wifiStatusWarnings, List<String> topBarApps, boolean showGreeting, boolean headerWhite, boolean clockWallpaper, int clockWallpaperDim, boolean clockGlow, String glassStyle, boolean singleRow, boolean dockBandAll, boolean lunarDate, int lunarUtcOffset, boolean dateBelowClock, boolean vpnPill, String locale, boolean powerOnHomeAlways, boolean inputsConnectedOnly, boolean inputsCecStateOnly,
                    int openOnStartNetworkWait, boolean openOnStartOnWake, boolean iconOnlyVpn, String clockFormat, boolean backOpensClock, boolean glowSnap,
                    boolean settingsKeyClearTask) {
         this.handleViewInputs = handleViewInputs;
         this.tileMenu = tileMenu;
+        this.tileCloseApp = tileCloseApp;
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.keyFilter = keyFilter;
@@ -494,6 +497,7 @@ final class Config {
         boolean focusOvershoot = res.getBoolean(R.bool.focus_overshoot);
         boolean wallpaperCaptions = res.getBoolean(R.bool.wallpaper_captions);
         boolean tileMenu = res.getBoolean(R.bool.tile_menu);
+        boolean tileCloseApp = res.getBoolean(R.bool.tile_close_app);
         String vpn = res.getString(R.string.vpn_app).trim();
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
         boolean showStats = res.getBoolean(R.bool.show_stats);
@@ -611,6 +615,7 @@ final class Config {
             focusOvershoot = bool(json, "focus_overshoot", focusOvershoot);
             wallpaperCaptions = bool(json, "wallpaper_captions", wallpaperCaptions);
             tileMenu = bool(json, "tile_menu", tileMenu);
+            tileCloseApp = bool(json, "tile_close_app", tileCloseApp);
             vpn = string(json, "vpn_app", vpn);
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
             showStats = bool(json, "show_stats", showStats);
@@ -726,7 +731,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, restoreKeyServices, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, dockOpacity, wallpaperOrder, applied, festival, inputKeycodes, appKeys, stockHomeRedirect,
                 json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow, appGlow, fadeRows,
-                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, dockEvenPadding,
+                Math.max(0, idleClockMinutes), keyFilter, dockGlass, glowStyle, wallpaperCaptions, handleViewInputs, tileMenu, tileCloseApp, dockEvenPadding,
                 dockBand, cinematicDots, cinematicWhiteFocus, wifiStatusColor, cinematicScrim, cinematicArt, wallpaperMoods, gamepadPassthrough,
                 consumeVolumeKeys, volumePausesFilter, homeIgnoreChannelKeys, powerOnHome, homeLongPressHome, wifiStatusWarnings, topBarApps, showGreeting, headerWhite, clockWallpaper,
                 Math.max(0, Math.min(90, clockWallpaperDim)), clockGlow, glassStyle, singleRow && dockRow, dockBandAll, lunar, lunarOffset,
